@@ -5,12 +5,12 @@
 
 <style>
 html{text-align:center}
-body{text-align:center;background-color:#ffffff;margin:0;font-size:1rem+3vw;font-family:helvetica,arial,verdana,sans-serif}
-input{font-size:2rem+4vw}
-input[type=radio]{width:2rem+3vw; height:2rem+3vw}
-h1{font-size:3rem+3vw;margin:0;padding:2px 0;text-align:left}
-h2{font-size:2rem+2vw;margin:0;padding:0 0 3px 0;text-align:left}
-h3{font-size:2rem+2vw;margin:0;padding:0 3px 5px 3px;text-align:left;text-decoration:underline}
+body{text-align:center;background-color:#ffffff;margin:0;font-size:2rem;font-family:helvetica,arial,verdana,sans-serif}
+input{font-size:2rem}
+input[type=radio]{width:2rem; height:2rem}
+h1{font-size:3rem;margin:0;padding:2px 0;text-align:left}
+h2{font-size:2rem;margin:0;padding:0 0 3px 0;text-align:left}
+h3{font-size:2rem;margin:0;padding:0 3px 5px 3px;text-align:left;text-decoration:underline}
 ol{margin:5px 0}
 </style>
 
@@ -26,8 +26,8 @@ ol{margin:5px 0}
 <form>
 <TD align=left>Child</TD>
 <TD colspan=2 align=left>
-<input type="radio" id="Mia" name="child" onclick="UpdateChild()" checked><label for="Mia">Mia</label>
-<input type="radio" id="Ethan" name="child" onclick="UpdateChild()"><label for="Ethan">Ethan</label>
+<input type="radio" id="Mia" name="child" onclick="UpdateChild()" checked> <label for="Mia">Mia</label>&nbsp;
+<input type="radio" id="Ethan" name="child" onclick="UpdateChild()"> <label for="Ethan">Ethan</label>
 </TD>
 </form>
 </TR>
@@ -50,8 +50,8 @@ ol{margin:5px 0}
 <TD align=left><B>Height</B></TD>
 <TD align=left><input type="number" id="height" name="height" min=0 step=0.01></div></TD>
 <TD align=left>
-<input type="radio" id="inches" name="heightunits" checked><label for="inches">inches</label><BR>
-<input type="radio" id="cm" name="heightunits"><label for="cm">cm</label>
+<input type="radio" id="inches" name="heightunits" checked> <label for="inches">inches</label><BR>
+<input type="radio" id="cm" name="heightunits"> <label for="cm">cm</label>
 </TD>
 </TR>
 <TR><TD align=left>Percentile</TD>
@@ -65,8 +65,8 @@ ol{margin:5px 0}
 <TD align=left><B>Weight</B></TD>
 <TD align=left><input type="number" id="weight" name="weight" min=0 step=0.01></TD>
 <TD align=left>
-<input type="radio" id="pounds" name="weightunits" checked><label for="pounds">pounds</label><BR>
-<input type="radio" id="kg" name="weightunits"><label for="kg">kg</label>
+<input type="radio" id="pounds" name="weightunits" checked> <label for="pounds">lbs</label><BR>
+<input type="radio" id="kg" name="weightunits"> <label for="kg">kg</label>
 </TD>
 </TR>
 <TR><TD align=left>Percentile</TD>
