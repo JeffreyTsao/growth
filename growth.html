@@ -1,16 +1,19 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
 
 <!DOCTYPE html>
 <html prefix="og: http://ogp.me/ns#">
 <head>
 <title>CDC Growth Chart (2-20 Years)</title>
-<link rel="stylesheet" href="https://www.infantchart.com/upload/childstatureage/resources/MyApp-all.css"/>
 
 <style>
 html{text-align:center}
-body{text-align:center;background-color:#ffffff;margin:0;font-size:13px;font-family:helvetica,arial,verdana,sans-serif}
-h1{font-size:18px;margin:0;padding:2px 0;text-align:left}
-h2{font-size:14px;margin:0;padding:0 0 3px 0;text-align:left}
-h3{font-size:14px;margin:0;padding:0 3px 5px 3px;text-align:left;text-decoration:underline}
+body{text-align:center;background-color:#ffffff;margin:0;font-size:4vw;font-family:helvetica,arial,verdana,sans-serif}
+input{font-size:4vw}
+input[type=radio]{width:3vw; height:3vw}
+h1{font-size:6vw;margin:0;padding:2px 0;text-align:left}
+h2{font-size:5vw;margin:0;padding:0 0 3px 0;text-align:left}
+h3{font-size:4vw;margin:0;padding:0 3px 5px 3px;text-align:left;text-decoration:underline}
 ol{margin:5px 0}
 </style>
 
@@ -44,10 +47,10 @@ ol{margin:5px 0}
 <TR><TD colspan=3><HR></TD></TR>
 <TR>
 <form action="javascript:calcheightpercentile()">
-<TD align=left>Height</TD>
+<TD align=left><B>Height</B></TD>
 <TD align=left><input type="number" id="height" name="height" min=0 step=0.01></div></TD>
 <TD align=left>
-<input type="radio" id="inches" name="heightunits" checked><label for="inches">inches</label>
+<input type="radio" id="inches" name="heightunits" checked><label for="inches">inches</label><BR>
 <input type="radio" id="cm" name="heightunits"><label for="cm">cm</label>
 </TD>
 </TR>
@@ -59,10 +62,10 @@ ol{margin:5px 0}
 <TR><TD colspan=3><HR></TD></TR>
 <TR>
 <form action="javascript:calcweightpercentile()">
-<TD align=left>Weight</TD>
+<TD align=left><B>Weight</B></TD>
 <TD align=left><input type="number" id="weight" name="weight" min=0 step=0.01></TD>
 <TD align=left>
-<input type="radio" id="pounds" name="weightunits" checked><label for="pounds">pounds</label>
+<input type="radio" id="pounds" name="weightunits" checked><label for="pounds">pounds</label><BR>
 <input type="radio" id="kg" name="weightunits"><label for="kg">kg</label>
 </TD>
 </TR>
@@ -88,6 +91,8 @@ var maleweight
 
 initialize()
 UpdateChild()
+calcheightpercentile()
+calcweightpercentile()
 
 function UpdateChild()
 {
@@ -119,10 +124,11 @@ function calcheightpercentile() {
   unitToConvert = "inches"
   conversionratio = 2.54
   data = (gender=='Female' ? femaleheight : maleheight)
+
   units = document.querySelector('input[name="' + unitName + '"]:checked').id
   value_anyunit = document.getElementById(valueID).value
   if (value_anyunit.length==0) {
-    document.getElementById(outputID).innerHTML = "<H1>" + "</H1>"
+    document.getElementById(outputID).innerHTML = "<H1>" + "&nbsp;" + "</H1>"
   } else {
     value = (units == unitToConvert ? value_anyunit * conversionratio : value_anyunit)
     //document.getElementById(outputID).innerHTML = valuefixed;
@@ -180,7 +186,7 @@ function calcweightpercentile() {
   units = document.querySelector('input[name="' + unitName + '"]:checked').id
   value_anyunit = document.getElementById(valueID).value
   if (value_anyunit.length==0) {
-    document.getElementById(outputID).innerHTML = "<H2>" + "</H2>"
+    document.getElementById(outputID).innerHTML = "<H1>" + "&nbsp;" + "</H1>"
   } else {
     value = (units == unitToConvert ? value_anyunit * conversionratio : value_anyunit)
     //document.getElementById(outputID).innerHTML = valuefixed;
@@ -203,9 +209,9 @@ function calcweightpercentile() {
 
     // Linear interpolate along percentile
     if (value<limits[0]) { // <3rd
-      document.getElementById(outputID).innerHTML = ("<H2>" + "< " + percentilerange[0] + " %" + "</H2>")
+      document.getElementById(outputID).innerHTML = ("<H1>" + "< " + percentilerange[0] + " %" + "</H1>")
     } else if (value>limits[8]) { // >97th
-      document.getElementById(outputID).innerHTML = "<H2>" + "> " + percentilerange[percentilerange.length-1] + " %" + "</H2>"
+      document.getElementById(outputID).innerHTML = "<H1>" + "> " + percentilerange[percentilerange.length-1] + " %" + "</H1>"
     } else {
       let percentile = 0
       if (value==limits[percentilerange.length-1]) { 
@@ -222,7 +228,7 @@ function calcweightpercentile() {
         y0 = 1-y1
         percentile = percentilerange[chosencolumn-1]*y0 + percentilerange[chosencolumn]*y1
       }
-      document.getElementById(outputID).innerHTML = "<H2>" + percentile.toFixed(2) + " %" + "</H2>"
+      document.getElementById(outputID).innerHTML = "<H1>" + percentile.toFixed(2) + " %" + "</H1>"
     }
   }
 }
