@@ -118,10 +118,7 @@ function calcheightpercentile() {
   outputID = "HeightPercentile"
   unitToConvert = "inches"
   conversionratio = 2.54
-alert("HERE")
   data = (gender=='Female' ? femaleheight : maleheight)
-alert("HERE2")
-
   units = document.querySelector('input[name="' + unitName + '"]:checked').id
   value_anyunit = document.getElementById(valueID).value
   if (value_anyunit.length==0) {
