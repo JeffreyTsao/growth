@@ -56,7 +56,7 @@ ol{margin:5px 0}
 </TR>
 <TR><TD align=left>Percentile</TD>
 <TD align=left><DIV id="HeightPercentile"></DIV></TD>
-<TD align=left><input type="submit" value="Calculate"></TD>
+<TD align=left><input type="submit" id="submitheight" value="Calculate"></TD>
 </form>
 </TR>
 <TR><TD colspan=3><HR></TD></TR>
@@ -71,7 +71,7 @@ ol{margin:5px 0}
 </TR>
 <TR><TD align=left>Percentile</TD>
 <TD align=left><DIV id="WeightPercentile"> </DIV></TD>
-<TD align=left><input type="submit" value="Calculate"></TD>
+<TD align=left><input type="submit" id="submitweight" value="Calculate"></TD>
 </form>
 </TR>
 </TABLE>
@@ -91,8 +91,8 @@ var maleweight
 
 initialize()
 UpdateChild()
-calcheightpercentile()
-calcweightpercentile()
+//calcheightpercentile()
+//calcweightpercentile()
 
 function UpdateChild()
 {
@@ -115,123 +115,86 @@ function UpdateChild()
   AgeYears = Math.floor(nummonths/12)
   AgeMonths = Math.floor(nummonths - AgeYears*12)
   document.getElementById("age").innerHTML = AgeYears + " year" + (AgeYears>1 ? "s" : "") + " " + AgeMonths + " month"+ (AgeMonths>1 ? "s" : "") ;
-}
 
+  calcheightpercentile()
+  calcweightpercentile()
+}
+  
 function calcheightpercentile() {
   unitName = "heightunits"
   valueID = "height"
   outputID = "HeightPercentile"
+  submitID = "submitheight"
   unitToConvert = "inches"
   conversionratio = 2.54
   data = (gender=='Female' ? femaleheight : maleheight)
-
-  units = document.querySelector('input[name="' + unitName + '"]:checked').id
-  value_anyunit = document.getElementById(valueID).value
-  if (value_anyunit.length==0) {
-    document.getElementById(outputID).innerHTML = "<H1>" + "&nbsp;" + "</H1>"
-  } else {
-    value = (units == unitToConvert ? value_anyunit * conversionratio : value_anyunit)
-    //document.getElementById(outputID).innerHTML = valuefixed;
-    
-    // Find chosenrow where nummonths is between chosenrow-1 and chosenrow
-    let numRows = data.length;
-    let chosenrow = 0;
-    for (let i = 1; i < numRows; i++) {
-      if (data[i-1][0]<nummonths && data[i][0]>=nummonths) {
-        chosenrow = i;
-        break;
-     }
-    }
-
-    // Calculate month-interpolated limits for 3rd, 5th, 10th, 25th, 50th, 75th, 90th, 95th, 97th percentile
-    percentilerange = [3,5,10,25,50,75,90,95,97]
-    x1 = (nummonths - data[chosenrow-1][0])/(data[chosenrow][0]-data[chosenrow-1][0])
-    x0 = 1-x1
-    limits = Array.apply(null, Array(data[0].length-1)).map(function (x, j) { return data[chosenrow-1][j+1]*x0 + data[chosenrow][j+1]*x1; }) 
-
-    // Linear interpolate along percentile
-    if (value<limits[0]) { // <3rd
-      document.getElementById(outputID).innerHTML = ("<H1>" + "< " + percentilerange[0] + " %" + "</H1>")
-    } else if (value>limits[8]) { // >97th
-      document.getElementById(outputID).innerHTML = "<H1>" + "> " + percentilerange[percentilerange.length-1] + " %" + "</H1>"
-    } else {
-      let percentile = 0
-      if (value==limits[percentilerange.length-1]) { 
-        percentile = percentilerange[percentilerange.length-1];
-      } else {
-        let chosencolumn = 0
-        for (let j = 1; j < limits.length; j++) {
-          if (value < limits[j]) {
-            chosencolumn = j;
-            break;
-          }
-        }
-        y1 = (value - limits[chosencolumn-1])/(limits[chosencolumn]-limits[chosencolumn-1])
-        y0 = 1-y1
-        percentile = percentilerange[chosencolumn-1]*y0 + percentilerange[chosencolumn]*y1
-      }
-      document.getElementById(outputID).innerHTML = "<H1>" + percentile.toFixed(2) + " %" + "</H1>"
-    }
-  }
+  UpdateCalculation(unitName, valueID, outputID, submitID, unitToConvert, conversionratio, data)
 }
 function calcweightpercentile() {
   unitName = "weightunits"
   valueID = "weight"
   outputID = "WeightPercentile"
+  submitID = "submitweight"
   unitToConvert = "pounds"
   conversionratio = 0.453592
   data = (gender=='Female' ? femaleweight : maleweight)
-
-
-  units = document.querySelector('input[name="' + unitName + '"]:checked').id
-  value_anyunit = document.getElementById(valueID).value
-  if (value_anyunit.length==0) {
-    document.getElementById(outputID).innerHTML = "<H1>" + "&nbsp;" + "</H1>"
+  UpdateCalculation(unitName, valueID, outputID, submitID, unitToConvert, conversionratio, data)
+}
+function UpdateCalculation(unitName, valueID, outputID, submitID, unitToConvert, conversionratio, data) {
+  if (nummonths<data[0][0] || nummonths>data[data.length-1][0]) {
+    document.getElementById(outputID).innerHTML = "<H2><FONT COLOR=#FF0000>" + (data[0][0]/12).toFixed(0) +"-" + (data[data.length-1][0]/12).toFixed(0)  + "yrs only</FONT></H2>"
+    document.getElementById(submitID).disabled = true
   } else {
-    value = (units == unitToConvert ? value_anyunit * conversionratio : value_anyunit)
-    //document.getElementById(outputID).innerHTML = valuefixed;
-    
-    // Find chosenrow where nummonths is between chosenrow-1 and chosenrow
-    let numRows = data.length;
-    let chosenrow = 0;
-    for (let i = 1; i < numRows; i++) {
-      if (data[i-1][0]<nummonths && data[i][0]>=nummonths) {
-        chosenrow = i;
-        break;
-     }
-    }
-
-    // Calculate month-interpolated limits for 3rd, 5th, 10th, 25th, 50th, 75th, 90th, 95th, 97th percentile
-    percentilerange = [3,5,10,25,50,75,90,95,97]
-    x1 = (nummonths - data[chosenrow-1][0])/(data[chosenrow][0]-data[chosenrow-1][0])
-    x0 = 1-x1
-    limits = Array.apply(null, Array(data[0].length-1)).map(function (x, j) { return data[chosenrow-1][j+1]*x0 + data[chosenrow][j+1]*x1; }) 
-
-    // Linear interpolate along percentile
-    if (value<limits[0]) { // <3rd
-      document.getElementById(outputID).innerHTML = ("<H1>" + "< " + percentilerange[0] + " %" + "</H1>")
-    } else if (value>limits[8]) { // >97th
-      document.getElementById(outputID).innerHTML = "<H1>" + "> " + percentilerange[percentilerange.length-1] + " %" + "</H1>"
+    document.getElementById(submitID).disabled = false
+    units = document.querySelector('input[name="' + unitName + '"]:checked').id
+    value_anyunit = document.getElementById(valueID).value  
+    if (value_anyunit.length==0) {
+      document.getElementById(outputID).innerHTML = "<H1>" + "&nbsp;" + "</H1>"
     } else {
-      let percentile = 0
-      if (value==limits[percentilerange.length-1]) { 
-        percentile = percentilerange[percentilerange.length-1];
-      } else {
-        let chosencolumn = 0
-        for (let j = 1; j < limits.length; j++) {
-          if (value < limits[j]) {
-            chosencolumn = j;
-            break;
-          }
-        }
-        y1 = (value - limits[chosencolumn-1])/(limits[chosencolumn]-limits[chosencolumn-1])
-        y0 = 1-y1
-        percentile = percentilerange[chosencolumn-1]*y0 + percentilerange[chosencolumn]*y1
+      value = (units == unitToConvert ? value_anyunit * conversionratio : value_anyunit)
+    
+      // Find chosenrow where nummonths is between chosenrow-1 and chosenrow
+      let numRows = data.length;
+      let chosenrow = 0;
+      for (let i = 1; i < numRows; i++) {
+        if (data[i-1][0]<nummonths && data[i][0]>=nummonths) {
+          chosenrow = i;
+          break;
+       }
       }
-      document.getElementById(outputID).innerHTML = "<H1>" + percentile.toFixed(2) + " %" + "</H1>"
+      // Calculate month-interpolated limits for 3rd, 5th, 10th, 25th, 50th, 75th, 90th, 95th, 97th percentile
+      percentilerange = [3,5,10,25,50,75,90,95,97]
+      x1 = (nummonths - data[chosenrow-1][0])/(data[chosenrow][0]-data[chosenrow-1][0])
+      x0 = 1-x1
+      limits = Array.apply(null, Array(data[0].length-1)).map(function (x, j) { return data[chosenrow-1][j+1]*x0 + data[chosenrow][j+1]*x1; }) 
+
+      // Linear interpolate along percentile
+      if (value<limits[0]) { // <3rd
+        document.getElementById(outputID).innerHTML = ("<H1>" + "< " + percentilerange[0] + " %" + "</H1>")
+      } else if (value>limits[8]) { // >97th
+        document.getElementById(outputID).innerHTML = "<H1>" + "> " + percentilerange[percentilerange.length-1] + " %" + "</H1>"
+      } else {
+        let percentile = 0
+        if (value==limits[percentilerange.length-1]) { 
+          percentile = percentilerange[percentilerange.length-1];
+        } else {
+          let chosencolumn = 0
+          for (let j = 1; j < limits.length; j++) {
+           if (value < limits[j]) {
+              chosencolumn = j;
+              break;
+            }
+          }
+          y1 = (value - limits[chosencolumn-1])/(limits[chosencolumn]-limits[chosencolumn-1])
+          y0 = 1-y1
+          percentile = percentilerange[chosencolumn-1]*y0 + percentilerange[chosencolumn]*y1
+        }
+        document.getElementById(outputID).innerHTML = "<H1>" + percentile.toFixed(2) + " %" + "</H1>"
+      }
     }
   }
 }
+
 
 function initialize() {
 
